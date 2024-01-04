@@ -1,18 +1,22 @@
 import { format } from "date-fns";
+import { v4 as uuidV4 } from "uuid";
 
 const modal = document.querySelector("[data-modal]");
 const modalBody = document.querySelector("[data-modal-body]");
+const overlay = document.querySelector("[data-overlay]");
+overlay.addEventListener("click", closeModal);
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeModal();
+});
 const eventModalTemplate = document.getElementById("event-form-template");
 
-export function openAddEventModal(date) {
-  const formModalBody = eventModalTemplate.content.cloneNode(true);
-  openModal(getEventFormModalBody({ date }));
+export function openAddEventModal(date, saveCallback) {
+  openModal(getEventFormModalBody({ date }, saveCallback));
 }
 export function openEditEventModal(event) {
   openModal(getEventFormModalBody(event));
 }
-function getEventFormModalBody(event, deleteCallback) {
-  console.log(event);
+function getEventFormModalBody(event, saveCallback, deleteCallback) {
   const formModalBody = eventModalTemplate.content.cloneNode(true);
   const isNewEvent = event.id == null;
   formModalBody.querySelector("[data-title]").textContent = isNewEvent
@@ -37,6 +41,49 @@ function getEventFormModalBody(event, deleteCallback) {
       closeModal();
     });
   }
+
+  const nameInput = form.querySelector("[data-name]");
+  nameInput.value = event.name || "";
+
+  const startTimeInput = form.querySelector("[data-start-time]");
+  const endTimeInput = form.querySelector("[data-end-time]");
+
+  startTimeInput.value = event.startTime;
+  endTimeInput.value = event.endTime;
+
+  const allDayCheckbox = form.querySelector("[data-all-day]");
+  allDayCheckbox.checked = event.isAllDay;
+  startTimeInput.disabled = allDayCheckbox.checked;
+  endTimeInput.disabled = allDayCheckbox.checked;
+  allDayCheckbox.addEventListener("change", () => {
+    startTimeInput.disabled = allDayCheckbox.checked;
+    endTimeInput.disabled = allDayCheckbox.checked;
+  });
+
+  startTimeInput.addEventListener("change", () => {
+    endTimeInput.min = startTimeInput.value;
+  });
+
+  const colorRadio = form.querySelector(
+    `[data-color][value = "${event.color}"]`
+  );
+  if (colorRadio) colorRadio.checked = true;
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const isAllDay = allDayCheckbox.checked;
+
+    saveCallback({
+      id: event.id || uuidV4(),
+      name: nameInput.value,
+      date: event.date,
+      isAllDay,
+      startTime: isAllDay ? undefined : startTimeInput.value,
+      endTime: isAllDay ? undefined : endTimeInput.value,
+      color: form.querySelector("[data-color]:checked").value,
+    });
+    closeModal();
+  });
   return formModalBody;
 }
 function openModal(bodyContents) {

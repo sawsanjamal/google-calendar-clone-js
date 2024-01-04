@@ -310,7 +310,7 @@
     </div>
 
     <div class="modal" data-modal>
-      <div class="overlay"></div>
+      <div class="overlay" data-overlay></div>
       <div class="modal-body" data-modal-body></div>
     </div>
 
@@ -344,25 +344,30 @@
     <template id="event-form-template">
       <div class="modal-title">
         <div data-title></div>
-        <small data-date>/small>
+        <small data-date></small>
       </div>
       <form data-form>
         <div class="form-group">
           <label for="name">Name</label>
-          <input type="text" name="name" id="name" data-name required/>
+          <input type="text" name="name" id="name" data-name required />
         </div>
         <div class="form-group checkbox">
-          <input type="checkbox" name="all-day" id="all-day" data-all-day/>
+          <input type="checkbox" name="all-day" id="all-day" data-all-day />
           <label for="all-day">All Day?</label>
         </div>
         <div class="row">
           <div class="form-group">
-            <label for="start-time" data-start-time>Start Time</label>
-            <input type="time" name="start-time" id="start-time" />
+            <label for="start-time">Start Time</label>
+            <input
+              type="time"
+              name="start-time"
+              id="start-time"
+              data-start-time
+            />
           </div>
           <div class="form-group">
-            <label for="end-time" data-end-time>End Time</label>
-            <input type="time" name="end-time" id="end-time" />
+            <label for="end-time">End Time</label>
+            <input type="time" name="end-time" id="end-time" data-end-time />
           </div>
         </div>
         <div class="form-group">
@@ -414,6 +419,18 @@
         <div class="events" data-event-container></div>
         <button class="events-view-more-btn" data-view-more-btn></button>
       </div>
+    </template>
+    <template id="all-day-event-template">
+      <button class="all-day-event event" data-event>
+        <div class="event-name" data-name></div>
+      </button>
+    </template>
+    <template id="timed-event-template">
+      <button class="event" data-event>
+        <div class="color-dot" data-color></div>
+        <div class="event-time" data-time></div>
+        <div class="event-name" data-name></div>
+      </button>
     </template>
   </body>
 </html>
