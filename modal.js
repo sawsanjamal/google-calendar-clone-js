@@ -13,8 +13,8 @@ const eventModalTemplate = document.getElementById("event-form-template");
 export function openAddEventModal(date, saveCallback) {
   openModal(getEventFormModalBody({ date }, saveCallback));
 }
-export function openEditEventModal(event) {
-  openModal(getEventFormModalBody(event));
+export function openEditEventModal(event, saveCallback, deleteCallback) {
+  openModal(getEventFormModalBody(event, saveCallback, deleteCallback));
 }
 function getEventFormModalBody(event, saveCallback, deleteCallback) {
   const formModalBody = eventModalTemplate.content.cloneNode(true);
