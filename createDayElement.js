@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { openAddEventModal } from "./modal";
+import { openAddEventModal, openViewAllModal } from "./modal";
 import { addEvent, getEventsForDay } from "./event";
 import renderMonth from "./renderMonth";
 import createEventElement from "./createEventElement";
@@ -33,7 +33,11 @@ export default function createDayElement(date, options = {}) {
         renderMonth(date);
       });
     });
-
+  dayElement
+    .querySelector("[data-view-more-btn]")
+    .addEventListener("click", () => {
+      openViewAllModal(date, getEventsForDay(date).map(createEventElement));
+    });
   const dayNumberElement = dayElement.querySelector("[data-day-number]");
   dayNumberElement.textContent = date.getDate();
   if (isCurrentDay) {
